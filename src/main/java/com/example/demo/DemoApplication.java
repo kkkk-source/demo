@@ -3,7 +3,6 @@ package com.example.demo;
 import com.example.demo.entity.Sale;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.SaleProduct;
-
 import com.example.demo.repository.SaleRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.SaleProductRepository;
@@ -30,9 +29,9 @@ public class DemoApplication implements CommandLineRunner {
     @Autowired
     private SaleProductRepository saleProductRepository;
 
-	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
 
     @Override
     public void run(String... args) throws Exception {
@@ -41,14 +40,14 @@ public class DemoApplication implements CommandLineRunner {
         saleRepository.deleteAllInBatch();
 
         Product product1 = Product.builder()
-                .price(new BigDecimal(200))
-                .name("pencil")
-                .build();
+            .price(new BigDecimal(200))
+            .name("pencil")
+            .build();
 
         Product product2 = Product.builder()
-                .price(new BigDecimal(4000))
-                .name("peace")
-                .build();
+            .price(new BigDecimal(4000))
+            .name("peace")
+            .build();
 
         Product productCreated1 = productRepository.save(product1);
         Product productCreated2 = productRepository.save(product2);
@@ -57,24 +56,25 @@ public class DemoApplication implements CommandLineRunner {
         //
         // public class SaleService {} 
         Sale sale1 = Sale.builder()
-                .price(new BigDecimal(4200))
-                .build();
+            .price(new BigDecimal(4200))
+            .build();
 
         Sale saleCreated1 = saleRepository.save(sale1);
         //
         //
         //
+        //
         SaleProduct saleProduct1 = SaleProduct.builder()
-                .sale(saleCreated1)
-                .product(productCreated1)
-                .amount(1)
-                .build();
+            .saleId(saleCreated1.getId()).productId(productCreated1.getId())
+            .sale(saleCreated1).product(productCreated1)
+            .amount(1)
+            .build();
 
         SaleProduct saleProduct2 = SaleProduct.builder()
-                .sale(saleCreated1)
-                .product(productCreated2)
-                .amount(1)
-                .build();
+            .saleId(saleCreated1.getId()).productId(productCreated2.getId())
+            .sale(saleCreated1).product(productCreated2)
+            .amount(1)
+            .build();
 
         SaleProduct saleProductCreated2 = saleProductRepository.save(saleProduct1);
         SaleProduct saleProductCreated1 = saleProductRepository.save(saleProduct2);

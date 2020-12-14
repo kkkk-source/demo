@@ -28,25 +28,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-//@IdClass(SaleProductKey.class)
+@IdClass(SaleProductKey.class)
 public class SaleProduct implements Serializable {
 
-    //@Id
-    //private Long saleId;
-
-    //@Id
-    //private Long productId;
-    //
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long saleId;
+
+    @Id
+    private Long productId;
 
     @ManyToOne
-    @JoinColumn(name = "saleId")
+    @MapsId("saleId")
     private Sale sale;
 
     @ManyToOne
-    @JoinColumn(name = "productId")
+    @MapsId("productId")
     private Product product;
 
     @NotNull
