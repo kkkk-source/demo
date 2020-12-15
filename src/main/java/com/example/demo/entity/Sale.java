@@ -1,14 +1,13 @@
 package com.example.demo.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Generated;
-import lombok.NoArgsConstructor;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,33 +16,31 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import java.io.Serializable;
-import java.util.List;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Generated;
+import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "sale")
 @Data
+@Entity
 @Generated
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(toBuilder = true)
-public class Sale implements Serializable {
+@Table( name = "sale" )
+@Builder( toBuilder = true )
+public class Sale
+    implements Serializable
+{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long id;
 
     @NotNull
     @NotBlank
     private BigDecimal price;
 
-    @OneToMany(mappedBy = "sale")
-    private List<SaleProduct> amounts;
-
-    private LocalDateTime createdDate;
-
-    private LocalDateTime updatedDate;
-
+    @OneToMany( mappedBy = "sale", fetch = FetchType.EAGER )
+    private List<SaleProduct> products;
 }
