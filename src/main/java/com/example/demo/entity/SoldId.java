@@ -1,9 +1,6 @@
 package com.example.demo.entity;
 
 import java.io.Serializable;
-import java.util.Objects;
-
-import javax.persistence.Column;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class SaleProductKey
+public class SoldId
     implements Serializable
 {
 

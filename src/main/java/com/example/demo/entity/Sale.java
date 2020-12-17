@@ -42,5 +42,5 @@ public class Sale
     private BigDecimal price;
 
     @OneToMany( mappedBy = "sale", fetch = FetchType.EAGER )
-    private List<SaleProduct> products;
+    private List<Sold> sold;
 }

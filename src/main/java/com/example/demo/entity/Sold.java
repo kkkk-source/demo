@@ -1,15 +1,12 @@
 package com.example.demo.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -27,9 +24,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder( toBuilder = true )
-@Table( name = "sale_product" )
-@IdClass( SaleProductKey.class )
-public class SaleProduct
+@Table( name = "sold" )
+@IdClass( SoldId.class )
+public class Sold
     implements Serializable
 {
 
