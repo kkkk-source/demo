@@ -12,7 +12,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.example.demo.controller.SaleSaveResponse;
+import com.example.demo.controller.SaleSaveRequest;
 import com.example.demo.controller.SoldListResponse;
+import com.example.demo.controller.SoldListRequest;
 import com.example.demo.entity.Sale;
 import com.example.demo.entity.Sold;
 import com.example.demo.entity.Product;
@@ -45,46 +47,45 @@ public class DemoApplication
     {
         Product product1 = Product.builder().price( new BigDecimal( 200 ) ).name( "pencil" ).build();
         Product product2 = Product.builder().price( new BigDecimal( 4000 ) ).name( "peace" ).build();
-
         Product productCreated1 = productRepository.save( product1 );
         Product productCreated2 = productRepository.save( product2 );
 
-        Sale sale1 = Sale.builder().price( new BigDecimal( 4200 ) ).build();
-        Sale saleCreated1 = saleRepository.save( sale1 );
+        SoldListRequest productToAdd1 =
+            SoldListRequest.builder().id( productCreated1.getId() ).name( productCreated1.getName() ).price( productCreated1.getPrice() ).amount( 1 ).build();
+        SoldListRequest productToAdd2 =
+            SoldListRequest.builder().id( productCreated2.getId() ).name( productCreated2.getName() ).price( productCreated2.getPrice() ).amount( 1 ).build();
 
-        Sold sold1 = Sold.builder().sale( saleCreated1 ).product( productCreated1 ).amount( 1 ).build();
-        Sold sold2 = Sold.builder().sale( saleCreated1 ).product( productCreated2 ).amount( 1 ).build();
+        List<SoldListRequest> products = new ArrayList<SoldListRequest>();
+        products.add( productToAdd1 );
+        products.add( productToAdd2 );
 
-        Sold soldCreated1 = soldRepository.save( sold1 );
-        Sold soldCreated2 = soldRepository.save( sold2 );
+        SaleSaveRequest saleRequestToSave =
+            SaleSaveRequest.builder().price( new BigDecimal( 4200 ) ).products( products ).build();
+        Sale saleToSave = SaleSaveRequest.toModel( saleRequestToSave );
+        Sale saleCreated = saleRepository.save( saleToSave );
 
-        Optional<Sale> saleInDatabase = saleRepository.findById( saleCreated1.getId() );
-        saleInDatabase.get().getSold().stream().forEach( ( sold ) -> {
-            System.out.printf( "id: %d, price: %.2f, amount: %d, " + "id: %d, name: %s, price: %.2f\n",
-                               saleInDatabase.get().getId(), saleInDatabase.get().getPrice(), sold.getAmount(),
-                               sold.getProduct().getId(), sold.getProduct().getName(), sold.getProduct().getPrice() );
+        products.stream().forEach( ( product ) -> {
+            Sold soldToSave = SoldListRequest.toModel( product );
+            soldToSave.setSale( saleCreated );
+            soldRepository.save( soldToSave );
         } );
 
-        List<Sold> soldList = soldRepository.findBySaleId( new Long( 1 ) );
-        soldList.stream().forEach( ( sold ) -> {
-            System.out.printf( "sale: %d price: %.2f\namount: %d\nproduct: %d name: %s price: %.2f\n",
-                               sold.getSale().getId(), sold.getSale().getPrice(), sold.getAmount(),
-                               sold.getProduct().getId(), sold.getProduct().getName(), sold.getProduct().getPrice() );
-        } );
+        Long id = new Long( 3 );
+        Optional<Sale> saleInDatabaseOptional = saleRepository.findById( id );
+        if ( saleInDatabaseOptional.isEmpty() )
+        {
+            System.err.printf( "demo: there is not a sale with id = %d", id );
+            return;
+        }
 
-        List<SoldListResponse> soldToResponse =
-            soldList.stream().map( SoldListResponse::fromModel ).collect( Collectors.toList() );
-        soldToResponse.stream().forEach( ( product ) -> {
-            System.out.printf( "id: %d, name: %s, price: %.2f, amount: %d\n", product.getId(), product.getName(),
-                               product.getPrice(), product.getAmount() );
-        } );
-
-        SaleSaveResponse saleToResponse = SaleSaveResponse.fromModel( saleInDatabase.get() );
-        System.out.printf( "\nid : %d\n", saleToResponse.getId() );
-        System.out.printf( "price : %.2f\n", saleToResponse.getPrice() );
+        Sale saleInDatabase = saleInDatabaseOptional.get();
+        SaleSaveResponse saleToResponse = SaleSaveResponse.fromModel( saleInDatabase );
+        System.out.printf( "{ id: %d, price: %.2f, products: [\n", saleToResponse.getId(), saleToResponse.getPrice() );
         saleToResponse.getProducts().stream().forEach( ( product ) -> {
-            System.out.printf( "id: %d, name: %s, price: %.2f, amount: %d\n", product.getId(), product.getName(),
+            System.out.printf( "\t{ id: %d, name: %s, price: %.2f, amount: %d }\n", product.getId(), product.getName(),
                                product.getPrice(), product.getAmount() );
         } );
+        System.out.println( "]}" );
+
     }
 }
