@@ -4,12 +4,15 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.example.demo.controller.SaleSaveResponse;
+import com.example.demo.controller.SoldListResponse;
 import com.example.demo.entity.Sale;
 import com.example.demo.entity.Sold;
 import com.example.demo.entity.Product;
@@ -45,8 +48,7 @@ public class DemoApplication
 
         Product productCreated1 = productRepository.save( product1 );
         Product productCreated2 = productRepository.save( product2 );
-        // important
-        //
+
         Sale sale1 = Sale.builder().price( new BigDecimal( 4200 ) ).build();
         Sale saleCreated1 = saleRepository.save( sale1 );
 
@@ -68,6 +70,21 @@ public class DemoApplication
             System.out.printf( "sale: %d price: %.2f\namount: %d\nproduct: %d name: %s price: %.2f\n",
                                sold.getSale().getId(), sold.getSale().getPrice(), sold.getAmount(),
                                sold.getProduct().getId(), sold.getProduct().getName(), sold.getProduct().getPrice() );
+        } );
+
+        List<SoldListResponse> soldToResponse =
+            soldList.stream().map( SoldListResponse::fromModel ).collect( Collectors.toList() );
+        soldToResponse.stream().forEach( ( product ) -> {
+            System.out.printf( "id: %d, name: %s, price: %.2f, amount: %d\n", product.getId(), product.getName(),
+                               product.getPrice(), product.getAmount() );
+        } );
+
+        SaleSaveResponse saleToResponse = SaleSaveResponse.fromModel( saleInDatabase.get() );
+        System.out.printf( "\nid : %d\n", saleToResponse.getId() );
+        System.out.printf( "price : %.2f\n", saleToResponse.getPrice() );
+        saleToResponse.getProducts().stream().forEach( ( product ) -> {
+            System.out.printf( "id: %d, name: %s, price: %.2f, amount: %d\n", product.getId(), product.getName(),
+                               product.getPrice(), product.getAmount() );
         } );
     }
 }
