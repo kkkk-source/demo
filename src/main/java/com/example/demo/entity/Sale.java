@@ -1,11 +1,9 @@
 package com.example.demo.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -39,8 +37,8 @@ public class Sale
 
     @NotNull
     @NotBlank
-    private BigDecimal price;
+    private LocalDateTime date;
 
     @OneToMany( mappedBy = "sale", fetch = FetchType.EAGER )
-    private List<Sold> sold;
+    private List<SaleLineItem> saleLineItems;
 }

@@ -24,9 +24,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder( toBuilder = true )
-@Table( name = "sold" )
-@IdClass( SoldId.class )
-public class Sold
+@Table( name = "sale_line_item" )
+@IdClass( SaleLineItemId.class )
+public class SaleLineItem
     implements Serializable
 {
 
@@ -36,9 +36,9 @@ public class Sold
 
     @Id
     @ManyToOne
-    private Product product;
+    private Item item;
 
     @NotNull
     @NotBlank
-    private Integer amount;
+    private Integer quantity;
 }
