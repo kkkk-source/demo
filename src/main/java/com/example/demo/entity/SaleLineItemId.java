@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class SoldId
+public class SaleLineItemId
     implements Serializable
 {
 
     private Long sale;
 
-    private Long product;
+    private Long item;
 }

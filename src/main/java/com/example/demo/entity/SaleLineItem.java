@@ -1,17 +1,14 @@
 package com.example.demo.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.OneToMany;
+import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -26,25 +23,22 @@ import lombok.NoArgsConstructor;
 @Generated
 @NoArgsConstructor
 @AllArgsConstructor
-@Table( name = "sale" )
 @Builder( toBuilder = true )
-public class Sale
+@Table( name = "sale_line_item" )
+@IdClass( SaleLineItemId.class )
+public class SaleLineItem
     implements Serializable
 {
 
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY )
-    private Long id;
-
-    @NotNull
-    @NotBlank
-    private LocalDateTime date;
-
-    @NotNull
-    @NotBlank
     @ManyToOne
-    private Store store;
+    private Sale sale;
 
-    @OneToMany( mappedBy = "sale", fetch = FetchType.EAGER )
-    private List<SaleLineItem> saleLineItems;
+    @Id
+    @ManyToOne
+    private Item item;
+
+    @NotNull
+    @NotBlank
+    private Integer quantity;
 }
