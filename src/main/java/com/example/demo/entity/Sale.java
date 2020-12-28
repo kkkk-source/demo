@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -38,6 +39,11 @@ public class Sale
     @NotNull
     @NotBlank
     private LocalDateTime date;
+
+    @NotNull
+    @NotBlank
+    @ManyToOne
+    private Store store;
 
     @OneToMany( mappedBy = "sale", fetch = FetchType.EAGER )
     private List<SaleLineItem> saleLineItems;

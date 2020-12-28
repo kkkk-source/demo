@@ -1,14 +1,15 @@
 package com.example.demo.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -23,9 +24,9 @@ import lombok.NoArgsConstructor;
 @Generated
 @NoArgsConstructor
 @AllArgsConstructor
-@Table( name = "item" )
+@Table( name = "store" )
 @Builder( toBuilder = true )
-public class Item
+public class Store
     implements Serializable
 {
 
@@ -39,9 +40,11 @@ public class Item
 
     @NotNull
     @NotBlank
-    private BigDecimal price;
+    private String address;
 
-    @NotNull
-    @ManyToOne
-    private Store store;
+    @OneToMany( mappedBy = "store", fetch = FetchType.LAZY )
+    private List<Item> items;
+
+    @OneToMany( mappedBy = "store", fetch = FetchType.LAZY )
+    private List<Sale> sales;
 }
